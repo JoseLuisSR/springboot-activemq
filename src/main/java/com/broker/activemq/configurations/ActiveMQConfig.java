@@ -1,5 +1,6 @@
 package com.broker.activemq.configurations;
 
+import org.apache.activemq.broker.BrokerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -28,6 +29,14 @@ public class ActiveMQConfig {
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
         return converter;
+    }
+
+    @Bean
+    public BrokerService broker() throws Exception {
+        BrokerService brokerService = new BrokerService();
+        brokerService.addConnector("tcp://localhost:61616");
+        brokerService.setPersistent(false);
+        return brokerService;
     }
 
 }

@@ -17,7 +17,7 @@ This project use a single queue to put and get message, all message are stored o
 to [persistence](https://activemq.apache.org/persistence) the message also . 
 
 
-## JXM (Java Management Extension)
+## JMX (Java Management Extension)
 
 [JMX](https://openjdk.java.net/groups/jmx/) is a standard API for management and monitoring Java applications at runtime. JMX allow integration between Java application 
 and JMX console/client like [JConsole](https://docs.oracle.com/javase/7/docs/technotes/guides/management/jconsole.html) to monitoring and 
