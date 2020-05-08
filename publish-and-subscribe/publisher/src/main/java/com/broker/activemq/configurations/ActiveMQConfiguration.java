@@ -1,8 +1,6 @@
 package com.broker.activemq.configurations;
 
 import org.apache.activemq.broker.BrokerService;
-import org.apache.activemq.broker.region.policy.PolicyEntry;
-import org.apache.activemq.broker.region.policy.PolicyMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -12,21 +10,18 @@ import org.springframework.jms.support.converter.MappingJackson2MessageConverter
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @EnableJms
 @Configuration
 public class ActiveMQConfiguration {
 
-    public static final String CUSTOMER_QUEUE = "customer_queue";
+    public static final String CUSTOMER_TOPIC = "customer-topic";
 
-    public static final String OBJECT_QUEUE = "object_queue";
+    public static final String TEXT_TOPIC = "text-topic";
 
-    public static final String TEXT_QUEUE = "text_queue";
+    public static final String OBJECT_TOPIC = "object-topic";
 
     @Bean
-    public JmsListenerContainerFactory<?> queueListenerFactory(){
+    public JmsListenerContainerFactory<?> topicListenerFactory(){
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setMessageConverter(messageConverter());
         return factory;
@@ -45,20 +40,7 @@ public class ActiveMQConfiguration {
         BrokerService brokerService = new BrokerService();
         brokerService.addConnector("tcp://localhost:61616");
         brokerService.setPersistent(false);
-        brokerService.setDestinationPolicy(policyMap());
         return brokerService;
-    }
-
-    @Bean
-    public PolicyMap policyMap(){
-        PolicyMap destinationPoliciy = new PolicyMap();
-        List<PolicyEntry> entries = new ArrayList<PolicyEntry>();
-        PolicyEntry queueEntry = new PolicyEntry();
-        queueEntry.setQueue(">");
-        queueEntry.setStrictOrderDispatch(false);
-        entries.add(queueEntry);
-        destinationPoliciy.setPolicyEntries(entries);
-        return destinationPoliciy;
     }
 
 }

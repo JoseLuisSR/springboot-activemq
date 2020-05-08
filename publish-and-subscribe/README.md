@@ -1,4 +1,4 @@
-# Point-to-Point
+# Publisher & Subscribe
 
 This is a guide to build spring boot application with embedded ActiveMQ customer broker.
 
