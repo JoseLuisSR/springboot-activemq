@@ -10,8 +10,8 @@ Java applications clients and identify weakness and strengths of embedded Active
 
 # ActiveMQ
 
-[ActiveMQ](https://activemq.apache.org/) is a Message Broker to exchange information between applications through send and 
-receive messages on queue or topics. ActiveMQ is an asynchronous messaging system MOM 
+[ActiveMQ](https://activemq.apache.org/) is a Message Broker to exchange information between applications 
+through messages, queues and topics. ActiveMQ is an asynchronous messaging system MOM 
 (Message Oriented Middleware) that enable decoupling communication between heterogeneous 
 applications that we call senders and consumers.
 
@@ -20,11 +20,12 @@ ActiveMQ is open source written in Java and with JMS, Rest WebSockets and JMX in
 MQTT (IoT), STOMP, also has libraries for different programing languages like Java, C, C++, 
 Phyton, .Net, Go, etc.
 
+Embedded ActiveMQ on Spring Boot has the version 5.15.12.
 
-## Messaging Styles
+# Messaging Styles
 
-ActiveMQ is designed for high performance and high throughput messaging where there are lots of messages 
-that need to be dispatched to consumers as quickly as possible.
+ActiveMQ is designed for high performance and high throughput messaging where the messages 
+are sending to consumers as quickly as possible.
 
 ActiveMQ supports two messaging styles of asynchronous messaging:
 
@@ -42,3 +43,35 @@ It is a software design pattern where ActiveMQ message broker is the key piece t
 Also used to exchange information between Publishers and Subscribers through messages and 
 topics. Each message is send to all applications subscribe to the topic and the message can 
 generate by multiple publishers.
+
+# Projects
+
+All are a web application using different frameworks and dependencies to enable and set up ActiveMQ, 
+expose a Rest/Json web service to put messages on queue and create a listener to get messages.
+
+Below you can see all the frameworks and dependencies necessary to build it.
+
+## JMX (Java Management Extension)
+
+[JMX](https://openjdk.java.net/groups/jmx/) is a standard API for management and monitoring Java applications at runtime. JMX allow integration between Java application 
+and JMX console/client like [JConsole](https://docs.oracle.com/javase/7/docs/technotes/guides/management/jconsole.html) to monitoring and 
+provide information about the performance and resource consumption of application running on Java platform.
+
+ActiveMQ is using JMX to manage resources through [JMX Beans](https://activemq.apache.org/jmx) to control the behaviour of the Broker.
+
+## Jolokia
+
+[Jolokia](https://jolokia.org/index.html) is an agent installed on server side to allow integration with JMX through API HTTP/Json. Application running on Java platforms and using JMX can use Jolokia 
+to manage and monitoring the resources over HTTP.
+
+ActiveMQ provide RESTFul management API for broker through Jolokia and JMX to access queue, topics, get broker metrics and execute manage operations all over HTTP with RESTful API.
+
+Also ActiveMQ expose [RESTful](https://activemq.apache.org/rest) API to publish and consuming customer over HTTP GET & POST methods. These API are not enable with ActiveMQ embedded on Spring Boot.
+
+## Hawtio
+
+[Hawtio](https://hawt.io/) is a web application that shows the metrics, monitoring and manage resource of Java applications that are using Jolokia to expose JMX API over HTTP. We can deploy Hawtio console
+on [spring boot](https://hawt.io/docs/get-started/#running-a-spring-boot-app) application to use the interface (web page, flows) to shows operation information of the application. 
+
+ActiveMQ embedded on Spring Boot doesn't have the default [web console](https://activemq.apache.org/web-console) for that reason is necessary use [Hawtio ActiveMQ plugin](https://hawt.io/docs/plugins/) 
+to connect ActiveMQ and check the status of the queue and other ActiveMQ components.
