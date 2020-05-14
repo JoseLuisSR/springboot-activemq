@@ -15,16 +15,16 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 @Service
-public class PublisherObjectService {
+public class ProducerObjectService {
 
-    private static final Logger log = LoggerFactory.getLogger(PublisherObjectService.class);
+    private static final Logger log = LoggerFactory.getLogger(ProducerObjectService.class);
 
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void publishObject(String value){
-        log.info("Send object message with value " +  value + " to topic " +  ActiveMQConfiguration.OBJECT_TOPIC);
-        jmsTemplate.send(ActiveMQConfiguration.OBJECT_TOPIC, new MessageCreator() {
+    public void sendObject(String value){
+        log.info("Send object message with value " + value + " to queue " + ActiveMQConfiguration.OBJECT_QUEUE);
+        jmsTemplate.send(ActiveMQConfiguration.OBJECT_QUEUE, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 ObjectMessage objectMessage = session.createObjectMessage();

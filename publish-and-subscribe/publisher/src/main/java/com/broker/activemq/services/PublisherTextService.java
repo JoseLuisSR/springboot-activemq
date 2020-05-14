@@ -22,7 +22,7 @@ public class PublisherTextService {
     private JmsTemplate jmsTemplate;
 
     public void publishText(String text){
-        log.info("Sending text " + text + " to topic " + ActiveMQConfiguration.TEXT_TOPIC);
+        log.info("Sending text message with data" + text + " to topic " + ActiveMQConfiguration.TEXT_TOPIC);
         jmsTemplate.send(ActiveMQConfiguration.TEXT_TOPIC, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {

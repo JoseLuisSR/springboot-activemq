@@ -18,7 +18,7 @@ public class PublisherCustomerService {
 
     public void publishCustomer(String name, Integer age){
         Customer customer = new Customer(name, age);
-        log.info("Sending customer " + customer.toString() + " to topic " + ActiveMQConfiguration.CUSTOMER_TOPIC);
+        log.info("Sending customer message " + customer.toString() + " to topic " + ActiveMQConfiguration.CUSTOMER_TOPIC);
         jmsTemplate.convertAndSend(ActiveMQConfiguration.CUSTOMER_TOPIC, customer);
     }
 }

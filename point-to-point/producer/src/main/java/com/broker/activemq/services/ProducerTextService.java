@@ -1,7 +1,6 @@
 package com.broker.activemq.services;
 
 import com.broker.activemq.configurations.ActiveMQConfiguration;
-import com.broker.activemq.entities.CustomClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,25 +10,25 @@ import org.springframework.stereotype.Service;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 @Service
-public class PublisherObjectService {
+public class ProducerTextService {
 
-    private static final Logger log = LoggerFactory.getLogger(PublisherObjectService.class);
+    private static final Logger log = LoggerFactory.getLogger(ProducerCustomerService.class);
 
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void publishObject(String value){
-        log.info("Send object message with value " +  value + " to topic " +  ActiveMQConfiguration.OBJECT_TOPIC);
-        jmsTemplate.send(ActiveMQConfiguration.OBJECT_TOPIC, new MessageCreator() {
+    public void sendText(String text){
+        log.info("Sending text message with data" + text + " to queue " + ActiveMQConfiguration.TEXT_QUEUE);
+        jmsTemplate.send(ActiveMQConfiguration.TEXT_QUEUE, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                ObjectMessage objectMessage = session.createObjectMessage();
-                objectMessage.setObject(new CustomClass(value));
-                return objectMessage;
+                TextMessage textMessage = session.createTextMessage();
+                textMessage.setText(text);
+                return textMessage;
             }
         });
     }

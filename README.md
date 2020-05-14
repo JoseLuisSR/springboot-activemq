@@ -7,6 +7,14 @@ JMS API.
 The goal is enable and set up ActiveMQ with Spring Boot, execute test from internal and external 
 Java applications clients and identify weakness and strengths of embedded ActiveMQ.
 
+# Spring Boot
+
+Spring Boot is a project built on the top of the Spring framework. It provides a simpler and faster 
+way to set up, configure, and run both simple and web-based applications.
+
+Spring Boot has embedded Apache Tomcat Web Server & ActiveMQ message broker.
+
+![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/Spring-Boot-ActiveMQ-FV.png?raw=true)
 
 # ActiveMQ
 
@@ -29,7 +37,7 @@ are sending to consumers as quickly as possible.
 
 ActiveMQ supports two messaging styles of asynchronous messaging:
 
-## Point to Point
+## [Point to Point](https://github.com/JoseLuisSR/springboot-activemq/tree/master/point-to-point)
 
 Enable exchange information between producers and consumers through message and queue. 
 Each message is receive by one single consumer and the messages can generate by multiple 
@@ -37,7 +45,7 @@ producers. ActiveMQ manage the connection from applications to the queue and del
 messages following dispatch policies like Round Robin (by default) or strict order, 
 you can choose one of these depending to your use case.
 
-## Publisher & Subscribe 
+## [Publisher & Subscribe](https://github.com/JoseLuisSR/springboot-activemq/tree/master/publish-and-subscribe) 
 
 It is a software design pattern where ActiveMQ message broker is the key piece to implement it.
 Also used to exchange information between Publishers and Subscribers through messages and 
@@ -46,7 +54,7 @@ generate by multiple publishers.
 
 # Projects
 
-All are a web application using different frameworks and dependencies to enable and set up ActiveMQ, 
+These are web application using different frameworks and dependencies to enable and set up ActiveMQ, 
 expose a Rest/Json web service to put messages on queue and create a listener to get messages.
 
 Below you can see all the frameworks and dependencies necessary to build it.
@@ -75,3 +83,7 @@ on [spring boot](https://hawt.io/docs/get-started/#running-a-spring-boot-app) ap
 
 ActiveMQ embedded on Spring Boot doesn't have the default [web console](https://activemq.apache.org/web-console) for that reason is necessary use [Hawtio ActiveMQ plugin](https://hawt.io/docs/plugins/) 
 to connect ActiveMQ and check the status of the queue and other ActiveMQ components.
+
+Below image is an example of the Hawtio web console integrated with embedded ActiveMQ Spring Boot.
+
+![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/Qhawtio-queues.png?raw=true)
