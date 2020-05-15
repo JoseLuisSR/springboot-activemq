@@ -18,6 +18,8 @@ dependencies {
 	compile 'com.fasterxml.jackson.core:jackson-databind'
 	compile 'org.jolokia:jolokia-core'
 	compile 'io.hawt:hawtio-springboot:2.9.1'
+	compile('io.springfox:springfox-swagger2:2.7.0')
+	compile('io.springfox:springfox-swagger-ui:2.7.0')
 
 	compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'

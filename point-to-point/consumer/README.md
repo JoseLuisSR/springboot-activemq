@@ -34,9 +34,8 @@ dependencies {
 
 ## Properties
 
-When [ActiveMQ properties](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#integration-properties) 
-are present an embedded ActiveMQ broker is started and configured automatically, you can configure connection to remote
-broker adding url also.
+With the below [ActiveMQ properties](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#integration-properties) 
+you can connect to ActiveMQ server over network.
 
 ```
 # ActiveMQ properties.
@@ -50,10 +49,18 @@ spring.activemq.user=admin
 
 ```
 
-## Receiver
+## Configuration
 
-The @EnableJms annotation enable the receiver class with @JmsListener annotation to create listener container to specific ActiveMQ queue and access to it 
-through JMSListenerContainerFactory. Spring inject JMS objects at runtime to connect ActiveMQ, access to queue and get the messages.
+Spring Boot can automatically configure a ConnectionFactory when it detects ActiveMQ is available on the class-path.
+We are using configuration class to declare @Beans methods to get the DefaultJmsListenerContainerFactory and use Jackson
+to convert classes to and from JSON. The annotation @EnableJMS allow define classes with method to receive messages with 
+@JmsListener annotation.
+
+## Listeners
+
+The @EnableJms annotation enable the receiver class with @JmsListener annotation to create listener container 
+to specific ActiveMQ queue and access to it through JMSListenerContainerFactory. Spring inject JMS objects 
+at runtime to connect ActiveMQ, access to queue and get the messages.
 
 You can find the classes definitions in this project
 
@@ -64,12 +71,11 @@ ActiveMQ support the below JMS Messages objects to store on topics:
 Message type | Content | Purpose |
 --- | --- | --- |
 TextMessage | A java.lang.String object| Exchanges simple text messages. such as XML and Json |
-ObjectMessage | A Serializable object in the Java programming langu
+ObjectMessage | A Serializable object in the Java programming language. | Exchanges Java objects.
 
-When you use ObjectMessage is necessary use Serialization interface to convert chain of Bytes the object 
-before send it in to message.
+When you use ObjectMessage is necessary use Serialization interface to deserialization chain of Bytes to object.
 
-Also is possible send classes created by us using Jackson to convert the object to JSON and send it like text message. 
+Also is possible receive classes created by us through Jackson that convert from JSON to object.
 
 ## Build
 
@@ -89,7 +95,5 @@ Just run jar file with the below commando in the console.
 
 ## Test
 
-This repository has JMeter test plan configure with HTTP Request to send customer through 
-Path variable or Body data. The end-point is:
-
-    http://localhost:8080/sender/
+When you execute producer and send message through JMeter you can see message receives from 
+the console.

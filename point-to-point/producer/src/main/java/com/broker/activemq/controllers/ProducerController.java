@@ -20,17 +20,17 @@ public class ProducerController {
     private ProducerObjectService producerObjectService;
 
     @PostMapping(path = "${producer.send.customer}")
-    public void sendCustomer(@RequestParam("name") String name, @RequestParam("age") Integer age){
+    public void produceCustomer(@RequestParam("name") String name, @RequestParam("age") Integer age){
         producerCustomerService.sendCustomer(name, age);
     }
 
     @PostMapping(path = "${producer.send.text}")
-    public void sendText(@PathVariable("text") String text){
+    public void produceText(@PathVariable("text") String text){
         producerTextService.sendText(text);
     }
 
     @PostMapping(path = "${producer.send.object}")
-    public void sendObject(@PathVariable("value") String value){
+    public void produceObject(@PathVariable("value") String value){
         producerObjectService.sendObject(value);
     }
 

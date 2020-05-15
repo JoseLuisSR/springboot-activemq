@@ -18,7 +18,7 @@ consumer.
 ![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/Point-to-Point-FV.png?raw=true)
 
 Producers connect to ActiveMQ and put messages on queue. These are using JMS to do it, 
-ActiveMQ supports [Support Multi-protocols](https://activemq.apache.org/cross-language-clients) also. Producer 
+ActiveMQ [Support Multi-protocols](https://activemq.apache.org/cross-language-clients) also. Producer 
 don't worry about the communication and availability with consumers to avoid the coupling 
 between those.
 
@@ -27,23 +27,20 @@ ActiveMQ attend producers and consumers to connect, put and get messages on queu
 different security, availability and performance policies to achieve Non functional requirements.
 
 Consumers connect to ActiveMQ and receive messages from queue. These are using JMS to do it, 
-ActiveMQ supports [Support Multi-protocols](https://activemq.apache.org/cross-language-clients) also. It has the logic 
+ActiveMQ [Support Multi-protocols](https://activemq.apache.org/cross-language-clients) also. It has the logic 
 to process the messages and execute business logic, also can produce response message and 
 put on ActiveMQ queue to reply origin producer.
 
 
 ## Projects
 
-This is a set of spring boot projects with different capabilities:
+In each project you can find more detail about set up and use ActiveMQ from spring boot.
 
-* Producer: Set up embedded ActiveMQ on Spring Boot, exposes RestFUL end-points to put 
+* [Producer](https://github.com/JoseLuisSR/springboot-activemq/tree/master/point-to-point/producer): Set up embedded ActiveMQ on Spring Boot, exposes RestFUL end-points to put 
 messages (JMS and custom objects) on queue through JMS API.
 
-* Consumer: Spring boot application that connect to ActiveMQ and receive the messages 
+* [Consumer](https://github.com/JoseLuisSR/springboot-activemq/tree/master/point-to-point/consumer): Spring boot application that connect to ActiveMQ and receive the messages 
 through queues listeners using JMS API.
 
 One application can be either producer and consumer at the same time and use embedded 
 ActiveMQ also.
-
-In each project you can find more detail about set up and use ActiveMQ from spring boot application
-to produce and consume messages.
