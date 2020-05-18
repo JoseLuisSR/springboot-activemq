@@ -1,6 +1,8 @@
 package com.broker.activemq.configurations;
 
 import org.apache.activemq.broker.BrokerService;
+import org.apache.activemq.broker.region.policy.PolicyEntry;
+import org.apache.activemq.broker.region.policy.PolicyMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -9,6 +11,9 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EnableJms
 @Configuration
@@ -40,7 +45,20 @@ public class ActiveMQConfiguration {
         BrokerService brokerService = new BrokerService();
         brokerService.addConnector("tcp://localhost:61616");
         brokerService.setPersistent(false);
+        brokerService.setDestinationPolicy(policyMap());
         return brokerService;
+    }
+
+    @Bean
+    public PolicyMap policyMap(){
+        PolicyMap destinationPoliciy = new PolicyMap();
+        List<PolicyEntry> entries = new ArrayList<PolicyEntry>();
+        PolicyEntry topicEntry = new PolicyEntry();
+        topicEntry.setTopic(">");
+        topicEntry.setStrictOrderDispatch(false);
+        entries.add(topicEntry);
+        destinationPoliciy.setPolicyEntries(entries);
+        return destinationPoliciy;
     }
 
 }

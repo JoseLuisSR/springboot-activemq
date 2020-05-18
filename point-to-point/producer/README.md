@@ -169,7 +169,9 @@ of producer. Examples:
     http://localhost:8080/producer/text/{text}
     http://localhost:8080/producer/object/{value}
     
+    
 ![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/JMeterPoint-to-Point.png?raw=true)
+    
     
 To Access Hawtio console and see the queue size and other metrics then just type the URL 
 
