@@ -1,7 +1,7 @@
-# Producer
+# Publisher
 
 Below are the steps to set up and deploy spring boot application with ActiveMQ embedded and
-produce different kind of messages.
+publish different kind of messages.
 
 ## Libraries
 
@@ -13,12 +13,11 @@ produce different kind of messages.
 
 * Swagger to build Swagger file of the RestFUL end-points.
 
-* In this case producer also enable embedded ActiveMQ so is necessary add jolokia and hawtio libraries.
+* In this case publisher also enable embedded ActiveMQ so is necessary add jolokia and hawtio libraries.
 
 ```
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-activemq'
-	compile 'org.apache.activemq:activemq-broker'
 	compile 'com.fasterxml.jackson.core:jackson-databind'
 	compile 'org.jolokia:jolokia-core'
 	compile 'io.hawt:hawtio-springboot:2.9.1'
@@ -36,7 +35,7 @@ dependencies {
 }	
 ```
 
-## Properties
+# Properties
 
 When [ActiveMQ properties](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#integration-properties) 
 are present an embedded ActiveMQ broker is started and configured automatically, you can configure connection to remote
@@ -46,13 +45,15 @@ broker adding url also.
 # ActiveMQ properties.
 
 spring.activemq.broker-url=tcp://localhost:61616
+spring.jms.pub-sub-domain=true
 spring.activemq.packages.trusted=com.broker.activemq.entities,java.lang
 spring.activemq.in-memory=true
 spring.activemq.close-timeout=15
 spring.activemq.password=admin
 spring.activemq.user=admin
-
 ```
+
+The property `spring.jms.pub-sub-domain` is switch destination type from queue to topic.
 
 To expose embedded ActiveMQ over the network you need to add Bean to return BrokerService 
 class with connector you need and change the property `spring.activemq.broker-url` wit tha value of the new connector.
@@ -82,48 +83,49 @@ through Hawtio web console, add the below properties also.
     hawtio.authenticationEnabled=false
 ```
 
-## Configuration
+##Configuration
 
 Spring Boot can automatically configure a ConnectionFactory when it detects ActiveMQ is available on the class-path.
 We are using ActiveMQConfiguration class to declare @Beans to get the DefaultJmsListenerContainerFactory and use Jackson
-to convert classes to and from JSON. The annotation @EnableJMS enable methods using @JmsListener annotation to consume 
-messages from ActiveMQ queue.
+to convert classes to and from JSON. The annotation @EnableJMS enable methods using @JmsListener annotation to subscribe
+ActiveMQ topic and receive messages.
 
-To set up dispatch policies like Round Robin and Strict Order is necessary registry Bean to return PolicyMap:
+To set up dispatch policies like Strict Order is necessary registry Bean to return PolicyMap:
 
 ```
     @Bean
     public PolicyMap policyMap(){
         PolicyMap destinationPoliciy = new PolicyMap();
         List<PolicyEntry> entries = new ArrayList<PolicyEntry>();
-        PolicyEntry queueEntry = new PolicyEntry();
-        queueEntry.setQueue(">");
-        queueEntry.setStrictOrderDispatch(false);
-        entries.add(queueEntry);
+        PolicyEntry topicEntry = new PolicyEntry();
+        topicEntry.setTopic(">");
+        topicEntry.setStrictOrderDispatch(false);
+        entries.add(topicEntry);
         destinationPoliciy.setPolicyEntries(entries);
         return destinationPoliciy;
     }
 ```
+
 ## Controller
 
-Also is necessary define a @RestController to expose Rest/Json end-points to produce messages through @Service classes.
+Also is necessary define a @RestController to expose Rest/Json end-points to publish messages through @Service classes.
 
-![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/SwaggerProducer.png?raw=true)
+![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/SwaggerPublisher.png?raw=true)
 
 To see all the details of the end-points go to `http://localhost:8080/swagger-ui.html` after run it project.
 
 ## Services
 
 We are using @Service Spring annotation to declare services with the logic to send 
-messages to specific queue through JmsTemplate class (simplifies JMS access code). 
+messages to specific topics through JmsTemplate class (simplifies JMS access code). 
 
 You can find the classes definitions in this project.
 
 ## Listeners
 
-The @EnableJms annotation enable the receiver class with @JmsListener annotation to create listener container 
-to specific ActiveMQ queue and access to it through JMSListenerContainerFactory. Spring inject JMS objects 
-at runtime to connect ActiveMQ, access to queue and get the messages.
+The @EnableJms annotation enable the subscriber class with @JmsListener annotation to create listener container 
+to specific ActiveMQ topic and access to it through JMSListenerContainerFactory. Spring inject JMS objects 
+at runtime to connect ActiveMQ, access to topic and get the messages.
 
 You can find the classes definitions in this project
 
@@ -144,13 +146,13 @@ and send it like text message.
 
 ## Build
 
-Producer project is using Gradle to resolve dependencies from repositories, also to build jar file, just type in your console
+Publisher project is using Gradle to resolve dependencies from repositories, also to build jar file, just type in your console
 
 
     gradle build 
 
     
-You can find the jar file in the build/libs directory with the name `producer-x.y.z.jar`
+You can find the jar file in the build/libs directory with the name `publisher-x.y.z.jar`
 
 Gradle has the option to build without having to install the Gradle runtime through [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
 
@@ -158,23 +160,23 @@ Gradle has the option to build without having to install the Gradle runtime thro
 
 Just run jar file with the below commando in the console.
 
-    java -jar producer-x.y.z.jar
+    java -jar publisher-x.y.z.jar
 
 ## Test
 
 This repository has JMeter test plan configure with HTTP Request to call RestFUL end-points 
-of producer. Examples:
+of publisher. Examples:
 
-    http://localhost:8080/producer/customer?name=&age=
-    http://localhost:8080/producer/text/{text}
-    http://localhost:8080/producer/object/{value}
+    http://localhost:8080/publisher/customer?name=&age=
+    http://localhost:8080/publisher/text/{text}
+    http://localhost:8080/publisher/object/{value}
     
     
-![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/JMeterPoint-to-Point.png?raw=true)
+![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/JMeterPublish-and-Subscribe.png?raw=true)
     
     
-To Access Hawtio console and see the queue size and other metrics then just type the URL 
+To Access Hawtio console and see the topics size and other metrics then just type the URL 
 
     http://localhost:8080/actuator/hawtio/
     
-![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/Qhawtio-queues.png?raw=true)
+![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/Qhawtio-topics.png?raw=true)

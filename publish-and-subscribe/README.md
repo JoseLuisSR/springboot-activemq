@@ -5,6 +5,18 @@ with low coupling. Publish & Subscribe is use in event driven architecture, comm
 between microservices and exchange information between bounded context with Domain Driven 
 Design.
 
+The publish and subscribe pattern can take several forms:
+
+* List-base: Each publisher maintain a topic list (mapping with subscriber) where a set 
+of subscribers want receive events from these topics. The publisher can choose to which topic 
+send the event.
+
+* Broadcast-based(Default on ActiveMQ): Publishers put events on topics which are then broadcast 
+to all subscribers. Subscriber analyze each events to decide which kind of events process and discard.
+
+* Content-base: Topics have predefined events, the publisher only send the events predefined by topic 
+and subscriber register to the topics that want receive events.
+
 ## Architecture
 
 ![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/Publish-Subscribe-FV.png?raw=true)
