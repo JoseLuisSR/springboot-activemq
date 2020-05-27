@@ -10,6 +10,7 @@ produce different kind of messages.
 * Jackson library is to convert objects to/from Json and send like text on a message.
 
 * Lombok is to build getter and setter methods automatically.It is not a dependency for Spring Boot & ActiveMQ.
+  You can write getter and setter methods instead.
 
 * Swagger to build Swagger file of the RestFUL end-points.
 
@@ -54,6 +55,10 @@ spring.activemq.user=admin
 
 ```
 
+ActiveMQ needs define [whitelist packages](https://activemq.apache.org/objectmessage) that can be exchanged using ObjectMessages, so is necessary add the property 
+`spring.activemq.packages.trusted` with all the packages used by the class that is going to be send/receive like a message.
+You can find details about kind of messages in the next sections.
+
 To expose embedded ActiveMQ over the network you need to add Bean to return BrokerService 
 class with connector you need and change the property `spring.activemq.broker-url` wit tha value of the new connector.
 
@@ -86,8 +91,8 @@ through Hawtio web console, add the below properties also.
 
 Spring Boot can automatically configure a ConnectionFactory when it detects ActiveMQ is available on the class-path.
 We are using ActiveMQConfiguration class to declare @Beans to get the DefaultJmsListenerContainerFactory and use Jackson
-to convert classes to and from JSON. The annotation @EnableJMS enable methods using @JmsListener annotation to consume 
-messages from ActiveMQ queue.
+to convert classes to and from JSON. Configuration class has the @EnableJMS that enables detection of methods using 
+@JmsListener annotation to call those each time the broker receive a message.
 
 To set up dispatch policies like Round Robin and Strict Order is necessary registry Bean to return PolicyMap:
 
@@ -104,6 +109,9 @@ To set up dispatch policies like Round Robin and Strict Order is necessary regis
         return destinationPoliciy;
     }
 ```
+
+To use Strict Order dispatch policy just put `true`.
+
 ## Controller
 
 Also is necessary define a @RestController to expose Rest/Json end-points to produce messages through @Service classes.
@@ -121,9 +129,8 @@ You can find the classes definitions in this project.
 
 ## Listeners
 
-The @EnableJms annotation enable the receiver class with @JmsListener annotation to create listener container 
-to specific ActiveMQ queue and access to it through JMSListenerContainerFactory. Spring inject JMS objects 
-at runtime to connect ActiveMQ, access to queue and get the messages.
+The consumer classes are using @JmsListener to receive messages, it annotation create listener container to specific 
+ActiveMQ queue and access to it through JMSListenerContainerFactory
 
 You can find the classes definitions in this project
 
@@ -136,10 +143,10 @@ Message type | Content | Purpose |
 TextMessage | A java.lang.String object| Exchanges simple text messages. such as XML and Json |
 ObjectMessage | A Serializable object in the Java programming language. | Exchanges Java objects.
 
-When you use ObjectMessage is necessary use Serialization interface to convert chain of Bytes the object 
+When you use ObjectMessage is necessary use Serializable interface to serialization from object to chain of Bytes 
 before send it in to message.
 
-Also is possible send custom classes through Jackson that convert the object to JSON 
+Also is possible send custom classes through Jackson that convert from object to JSON 
 and send it like text message. 
 
 ## Build

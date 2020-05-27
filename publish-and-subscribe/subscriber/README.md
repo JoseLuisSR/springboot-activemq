@@ -1,7 +1,7 @@
-# Consumer
+# Subscriber
 
-Below are the steps to set up and deploy spring boot application to consume different kind 
-of messages.
+Below are the steps to set up and deploy spring boot application to subscribe and  
+receive different kind of messages.
 
 ## Libraries
 
@@ -14,7 +14,7 @@ To use ActiveMQ from Spring Boot project is necessary use a set of libraries.
 * Lombok is to build getter and setter methods automatically.It is not a dependency for Spring Boot & ActiveMQ.
   You can write getter and setter methods instead.
 
-* Consumer doesn't need jolokia and hawtio libraries because it don't have enable embedded ActiveMQ, just connect to remote broker server.
+* Subscriber doesn't need jolokia and hawtio libraries because it don't have enable embedded ActiveMQ, just connect to remote broker server.
 
 ```
 dependencies {
@@ -26,7 +26,7 @@ dependencies {
 
 	testCompileOnly 'org.projectlombok:lombok:1.18.12'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-
+	
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -42,13 +42,15 @@ you can connect to ActiveMQ server over network.
 # ActiveMQ properties.
 
 spring.activemq.broker-url=tcp://localhost:61616
+spring.jms.pub-sub-domain=true
 spring.activemq.packages.trusted=com.broker.activemq.entities,java.lang
 spring.activemq.in-memory=true
 spring.activemq.close-timeout=15
 spring.activemq.password=admin
 spring.activemq.user=admin
-
 ```
+
+The property `spring.jms.pub-sub-domain` is switch destination type from queue to topic.
 
 ActiveMQ needs define [whitelist packages](https://activemq.apache.org/objectmessage) that can be exchanged using ObjectMessages, so is necessary add the property 
 `spring.activemq.packages.trusted` with all the packages used by the class that is going to be send/receive like a message.
@@ -63,8 +65,8 @@ to convert classes to and from JSON. Configuration class has the @EnableJMS that
 
 ## Listeners
 
-The consumer classes are using @JmsListener to receive messages, it annotation create listener container to specific 
-ActiveMQ queue and access to it through JMSListenerContainerFactory
+The subscriber classes are using @JmsListener to receive messages, it annotation create listener container to specific 
+ActiveMQ topic and access to it through JMSListenerContainerFactory
 
 You can find the classes definitions in this project
 
@@ -83,11 +85,11 @@ Also is possible receive classes created by us through Jackson that convert from
 
 ## Build
 
-Consumer project is using Gradle to resolve dependencies from repositories, also to build jar file, just type in your console
+Subscriber project is using Gradle to resolve dependencies from repositories, also to build jar file, just type in your console
 
     gradle build 
     
-You can find the jar file in the build/libs directory with the name `consumer-x.y.z.jar`
+You can find the jar file in the build/libs directory with the name `subscriber-x.y.z.jar`
 
 Gradle has the option to build without having to install the Gradle runtime through [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
 
@@ -95,9 +97,10 @@ Gradle has the option to build without having to install the Gradle runtime thro
 
 Just run jar file with the below commando in the console.
 
-    java -jar consumer-x.y.z.jar
+    java -jar subscriber-x.y.z.jar
 
 ## Test
 
-When you execute producer and send message through JMeter you can see message receives from 
+When you execute publisher and send message through JMeter you can see message receives from 
 the console.
+

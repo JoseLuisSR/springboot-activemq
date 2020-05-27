@@ -5,17 +5,26 @@ with low coupling. Publish & Subscribe is use in event driven architecture, comm
 between microservices and exchange information between bounded context with Domain Driven 
 Design.
 
-The publish and subscribe pattern can take several forms:
+Len Bass mention in his book [Software Architecture in Practice](https://www.amazon.com/-/es/Len-Bass/dp/0321815734) that publish and subscribe pattern can take several forms:
 
-* List-base: Each publisher maintain a topic list (mapping with subscriber) where a set 
-of subscribers want receive events from these topics. The publisher can choose to which topic 
-send the event.
+"
+* List-base, is a realization of the pattern where every publisher maintains subscription list that
+have registered interest in receiving the event. This version of the pattern is less decoupled than others
+and hence it does not provide as much modifiability, but it can be quite efficient in terms of runtime
+overhead. Also, if the components are distributed, there is not single point of failure.
 
-* Broadcast-based(Default on ActiveMQ): Publishers put events on topics which are then broadcast 
-to all subscribers. Subscriber analyze each events to decide which kind of events process and discard.
+* Broadcast-based, the publishers have less (or no) knowledge of the subscribers
+Publishers simply publish events, which are then broadcast. Subscribers examine each event as it arrives
+and determine whether the published event is of interest. This version has the potential to be very inefficient
+if there are lost of messages and most messages are no of interest to a particular subscriber.
 
-* Content-base: Topics have predefined events, the publisher only send the events predefined by topic 
-and subscriber register to the topics that want receive events.
+* Content-base, topics are predefined events or messages, and a component subscribers to all
+events within the topic. Content, on the other hand, is much more general. Each event is associated with a 
+set of attributes and is delivered to a subscribers only if those attributes match subscriber-defined patterns.
+
+"
+
+ActiveMQ use Broadcast-base by default, the others two forms can be implementing through programming logic.
 
 ## Architecture
 
@@ -28,7 +37,7 @@ ActiveMQ receive messages from publishers and store those in a topic, also recor
 subscribers interested in the topic and dispatch the messages to all subscribers. 
 
 The subscriber listen the ActiveMQ topics and receive the messages, also needs to know where 
-is ActiveMQ servers and connect to it. Subscribers can register to one or many topic they want.
+is ActiveMQ server and connect to it. Subscribers can register to one or many topic they want.
 
 ## Projects
 
@@ -42,3 +51,14 @@ through topic listeners using JMS API.
 
 One application could be Publisher and Subscriber at the same time and use embedded 
 ActiveMQ also.
+
+## Virtual topic
+
+[Virtual Topic](https://activemq.apache.org/virtual-destinations) is a very good capability of ActiveMQ that combine the
+best of two worlds, queues and topics.
+
+Messages published in topic are copy to queue and then send to consumer/subscriber that are listening the queue. 
+Check [Tomas](https://tuhrig.de/virtual-topics-in-activemq/) post for more information.
+
+Also check the post about [Queue vs. Topics vs. Virtual Topics](https://tuhrig.de/queues-vs-topics-vs-virtual-topics-in-activemq/) 
+to know the Pros & Cons of each one and guide you in which cases use one of these.

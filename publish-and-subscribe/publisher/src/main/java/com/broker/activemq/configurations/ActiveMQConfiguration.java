@@ -1,8 +1,7 @@
 package com.broker.activemq.configurations;
 
 import org.apache.activemq.broker.BrokerService;
-import org.apache.activemq.broker.region.policy.PolicyEntry;
-import org.apache.activemq.broker.region.policy.PolicyMap;
+import org.apache.activemq.broker.region.policy.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -55,7 +54,7 @@ public class ActiveMQConfiguration {
         List<PolicyEntry> entries = new ArrayList<PolicyEntry>();
         PolicyEntry topicEntry = new PolicyEntry();
         topicEntry.setTopic(">");
-        topicEntry.setStrictOrderDispatch(false);
+        topicEntry.setStrictOrderDispatch(true);
         entries.add(topicEntry);
         destinationPoliciy.setPolicyEntries(entries);
         return destinationPoliciy;
