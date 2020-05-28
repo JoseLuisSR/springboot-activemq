@@ -147,7 +147,7 @@ When you use ObjectMessage is necessary use Serializable interface to serializat
 before send it in to message.
 
 Also is possible send custom classes through Jackson that convert from object to JSON 
-and send it like text message. 
+and send it like text message.  
 
 ## Build
 
@@ -185,3 +185,29 @@ To Access Hawtio console and see the queue size and other metrics then just type
     http://localhost:8080/actuator/hawtio/
     
 ![Screenshot](https://github.com/JoseLuisSR/springboot-activemq/blob/master/doc/img/Qhawtio-queues.png?raw=true)
+
+## Virtual topics
+
+To publish messages in virtual topics is necessary name the topics as `VirtualTopic.{TopicName}`:
+
+```
+    public void publishCustomer(String name, Integer age){
+        Customer customer = new Customer(name, age);
+        log.info("Sending customer message " + customer.toString() + " to virtual topic " + VirtualTopic.MY-TOPIC-NAME);
+        jmsTemplate.convertAndSend(new ActiveMQTopic("VirtualTopic.MY-TOPIC-NAME"), customer);
+    }
+```
+ 
+The listener method needs use queue name `Consumer.{ConsumerName}.VirtualTopic.{TopicName}` on destination property. 
+The `VirtualTopic.{TopicName}` is the name used by producer to publish messages on topic. 
+
+```
+    @JmsListener(destination = "Consumer.A.VirtualTopic.MY-TOPIC-NAME")
+    public void receiveCustomer(Customer customer){
+        log.info("Received Customer message: " + customer.toString());
+    }
+```
+
+That's it. Remember virtual topic combine the best of two worlds topic and queue. The messages are going publishing 
+on a topic, then ActiveMQ copy the messages from topic to queue (one o more queues) and finally you can use dispatch 
+policies to send message to just one consumer and not all consumer like publisher and subscriber message style does.

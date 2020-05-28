@@ -44,20 +44,7 @@ public class ActiveMQConfiguration {
         BrokerService brokerService = new BrokerService();
         brokerService.addConnector("tcp://localhost:61616");
         brokerService.setPersistent(false);
-        brokerService.setDestinationPolicy(policyMap());
         return brokerService;
-    }
-
-    @Bean
-    public PolicyMap policyMap(){
-        PolicyMap destinationPoliciy = new PolicyMap();
-        List<PolicyEntry> entries = new ArrayList<PolicyEntry>();
-        PolicyEntry topicEntry = new PolicyEntry();
-        topicEntry.setTopic(">");
-        topicEntry.setStrictOrderDispatch(true);
-        entries.add(topicEntry);
-        destinationPoliciy.setPolicyEntries(entries);
-        return destinationPoliciy;
     }
 
 }

@@ -44,3 +44,14 @@ through queues listeners using JMS API.
 
 One application can be either producer and consumer at the same time and use embedded 
 ActiveMQ also.
+
+## Virtual topic
+
+[Virtual Topic](https://activemq.apache.org/virtual-destinations) is a very good capability of ActiveMQ that combine the
+best of two worlds, queues and topics.
+
+Messages published in topic are copy to queue and then send to consumer/subscriber that are listening the queue. 
+Check [Tomas](https://tuhrig.de/virtual-topics-in-activemq/) post for more information.
+
+Also check the post about [Queue vs. Topics vs. Virtual Topics](https://tuhrig.de/queues-vs-topics-vs-virtual-topics-in-activemq/) 
+to know the Pros & Cons of each one and guide you in which cases use one of these.

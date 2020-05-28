@@ -101,3 +101,19 @@ Just run jar file with the below commando in the console.
 
 When you execute producer and send message through JMeter you can see message receives from 
 the console.
+
+## Virtual topics
+
+To consume messages from virtual topics the listener method needs use the queue name `Consumer.{ConsumerName}.VirtualTopic.{TopicName}` 
+on destination property. The `VirtualTopic.{TopicName}` is the name used by producer to publish messages on topic. 
+
+```
+    @JmsListener(destination = "Consumer.A.VirtualTopic.MY-TOPIC-NAME")
+    public void receiveCustomer(Customer customer){
+        log.info("Received Customer message: " + customer.toString());
+    }
+```
+
+That's it. Remember virtual topic combine the best of two worlds topic and queue. The messages are going publishing 
+on a topic, then ActiveMQ copy the messages from topic to queue (one o more queues) and finally you can use dispatch 
+policies to send message to just one consumer and not all consumer like publisher and subscriber message style does.

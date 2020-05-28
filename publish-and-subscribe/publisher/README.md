@@ -95,26 +95,6 @@ We are using ActiveMQConfiguration class to declare @Beans to get the DefaultJms
 to convert classes to and from JSON. Configuration class has the @EnableJMS that enables detection of methods using 
 @JmsListener annotation to call those each time the broker receive a message.
 
-To set up dispatch policies like Strict Order is necessary registry Bean to return PolicyMap:
-
-```
-    @Bean
-    public PolicyMap policyMap(){
-        PolicyMap destinationPoliciy = new PolicyMap();
-        List<PolicyEntry> entries = new ArrayList<PolicyEntry>();
-        PolicyEntry topicEntry = new PolicyEntry();
-        topicEntry.setTopic(">");
-        topicEntry.setStrictOrderDispatch(false);
-        entries.add(topicEntry);
-        destinationPoliciy.setPolicyEntries(entries);
-        return destinationPoliciy;
-    }
-```
-
-To use Strict Order dispatch policy just put `true`.
-
-You can use the dispatch policies if you use Virtual Topics otherwise the messages will be sent by broadcast.
-
 ## Controller
 
 Also is necessary define a @RestController to expose Rest/Json end-points to publish messages through @Service classes.
